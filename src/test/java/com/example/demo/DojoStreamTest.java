@@ -41,23 +41,48 @@ public class DojoStreamTest {
 
     @Test
     void mejorJugadorConNacionalidadFrancia(){
+        List<Player> list = CsvUtilFile.getPlayers();
+        list.stream().filter(player -> player.getNational().equals("France"))
+                .reduce((player, player2) -> player.getWinners() > player2.getWinners() ? player : player2)
+                .ifPresent(player -> System.out.println("El mejor jugador frances es "+player.getName()));
     }
 
 
     @Test
     void clubsAgrupadosPorNacionalidad(){
+        List<Player> list = CsvUtilFile.getPlayers();
+        list.stream().collect(Collectors.groupingBy(player -> player.getNational()))
+                .forEach((pais, players) -> {
+                    System.out.println("Pais: "+pais);
+                    System.out.println("Clubs: ");
+                    players.forEach(player -> System.out.println(player.getClub()));
+                });
     }
 
     @Test
     void clubConElMejorJugador(){
+        List<Player> list = CsvUtilFile.getPlayers();
+        list.stream().reduce((player, player2) -> player.getWinners() > player2.getWinners() ? player : player2)
+                .ifPresent(player -> System.out.println("El club con el mejor jugador es "+player.getClub()));
+
     }
 
     @Test
     void ElMejorJugador(){
+        List<Player> list = CsvUtilFile.getPlayers();
+        list.stream().reduce((player, player2) -> player.getWinners() > player2.getWinners() ? player : player2)
+                .ifPresent(player -> System.out.println("El mejor jugador es "+player.getName()));
+
     }
 
     @Test
     void mejorJugadorSegunNacionalidad(){
+        List<Player> list = CsvUtilFile.getPlayers();
+        list.stream().collect(Collectors.groupingBy(player -> player.getNational()))
+                .forEach((pais, players) -> {
+                    players.stream().reduce((player, player2) -> player.getWinners() > player2.getWinners() ? player : player2)
+                            .ifPresent(player -> System.out.println("El mejor jugador de "+player.getNational()+ " es "+player.getName()));
+                });
     }
 
 
